@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- CSS 読み込み -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/layout/layout.css}">
+
+    <title>セクション一覧 - MySite</title>
+
+    <!-- JavaScript を `<head>` で読み込む（`defer` 必須） -->
+    <script th:src="@{/js/sort.js}" defer></script>
+    <script defer>
+        console.log("HTML is fully loaded, checking if sortTable exists...");
+        console.log("typeof sortTable:", typeof sortTable);
+    </script>
+    <style>
+		.sortable {
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h2>セクション一覧画面</h2>
+        <div class="mb-4">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="th-width sortable" onclick="sortTable('sectionId')">課番号</th>
+                        <th class="th-width sortable" onclick="sortTable('sectionName')">課名</th>
+                        <th class="th-width sortable" onclick="sortTable('totalSales')">合計売上</th>
+                        <th class="th-width sortable" onclick="sortTable('totalEmployees')">合計人数</th>
+                        <th class="th-width sortable" onclick="sortTable('avgSalesPerPerson')">1人あたりの売上平均値(小数点切捨)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item: ${dispList}">
+                        <td th:text="${item.sectionId}"></td>
+                        <td th:text="${item.sectionName}"></td>
+                        <td th:text="${item.totalSales}"></td>
+                        <td th:text="${item.totalEmployees}"></td>
+                        <td th:text="${item.avgSalesPerPerson}"></td>
+                        <td>
+                           <a class="btn btn-primary" th:href="@{'/employees/list/section/' +  ${item.sectionId} + '/' + ${item.sectionName}}">
+								社員一覧
+							</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 一行分の空白 -->
+        <div class="mb-4"></div>
+
+        <!-- 全社員一覧ボタン -->
+        <div class="text-center">
+            <a class="btn btn-success" th:href="@{/employees/list}">
+                全社員一覧を表示
+            </a>
+        </div>
+
+    </div>
+</body>
+</html>

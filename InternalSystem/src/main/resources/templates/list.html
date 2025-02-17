@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{base}">
+
+<head>
+	<title>ユーザー⼀覧</title>
+	<script th:src="@{/js/empList.js}" defer></script>
+	<style>
+		.retired {
+			background-color: #d3d3d3 !important;
+			/* 背景をグレー */
+			color: #808080;
+			/* 文字色も薄く */
+			pointer-events: none;
+			opacity: 0.5;
+		}
+		.sortable {
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<!--<div class="mb-4">
+				<a class="btn btn-primary" th:href="@{'/employees/add'}">
+									登録
+								</a>
+				<form id="employee-search-form" method="post" th:action="@{/employees/list}"
+						class="form-inline" th:object="${searchForm}">
+					<div class="form-group mx-sm-3">
+						<label for="name" class="mr-2">従業員名</label>
+						<input type="text" class="form-control" th:field="*{name}"/>
+					</div>
+					<div class="form-group mx-sm-3">
+						<label for="name" class="mr-2">メールアドレス</label>
+						<input type="text" class="form-control" th:field="*{email}"/>
+					</div>
+					<div class="form-group mx-sm-3">
+						<label for="name" class="mr-2">入社年月日</label>
+						<input type="date" class="form-control" th:field="*{hireDate}"/>
+					</div>
+					<button class="btn btn-primary" type="submit">検索</button>
+				</form>
+			</div>-->
+		<h1 th:text="${sectionName}"></h1>
+
+		<!-- ステータス選択（ラジオボタン） -->
+		<div class="form-group">
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="status" value="all" id="statusAll"
+					onchange="updateStatusFilter()">
+				<label class="form-check-label" for="statusAll">全社員</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="status" value="active" id="statusActive"
+					onchange="updateStatusFilter()">
+				<label class="form-check-label" for="statusActive">在籍社員</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="status" value="retired" id="statusRetired"
+					onchange="updateStatusFilter()">
+				<label class="form-check-label" for="statusRetired">退職社員</label>
+			</div>
+		</div>
+
+		<div>
+			<!-- 交互色、枠線、ホバー機能 -->
+			<table class="table table-striped table-bordered table-hover">
+				<thead class="thead-light">
+					<tr>
+						<th class="th-width sortable" data-sort="id">ID</th>
+						<th class="th-width sortable" data-sort="name">氏名</th>
+						<th class="th-width sortable" data-sort="area">担当地区</th>
+						<th class="th-width sortable" data-sort="sales">売上</th>
+						<th class="th-width sortable" data-sort="customers">保有顧客数</th>
+						<th class="th-width sortable" data-sort="updated_at">更新日時</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="item: ${empList}" th:classappend="${item.deleted} ? 'retired'">
+						<td th:text="${item.id}"></td>
+						<td th:text="${item.name}"></td>
+						<td th:text="${item.area}"></td>
+						<td th:text="${item.sales}"></td>
+						<td th:text="${item.customers}"></td>
+						<td th:text="${#dates.format(item.updatedAt, 'yyyy/MM/dd')}"></td>
+						<td>
+							<a class="btn btn-primary" th:href="@{'/employees/edit/section/' + ${item.id}}">
+								編集
+							</a>
+							<a class="btn btn-primary" th:href="@{'/employees/list/section/delete/' + ${item.id}}" onclick="attention(event)">
+								削除
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="summary">
+			全 <span id="totalCount" th:text="${totalCount}">0</span> 件のデータがあります。
+		</div>
+
+
+		<div id="pagination">
+			<button id="prevPage">« 前へ</button>
+			<span id="totalPages" th:attr="data-value=${totalPages}"></span>
+			<button id="nextPage">次へ »</button>
+		</div>
+
+		<div>
+			<a class="btn btn-primary" th:href="@{/sections/list}">
+				セクション一覧画面へ
+			</a>
+		</div>
+
+
+
+
+	</div>
+</body>
+
+</html>

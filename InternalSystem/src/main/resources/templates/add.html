@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+<head>
+    <title>従業員登録</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2 class="mb-4">従業員登録フォーム</h2>
+        
+        <form th:action="@{/employees/add}" method="post" th:object="${employeesForm}" class="form-container">
+            <table class="table table-bordered table-hover">
+
+                <!-- 社員番号 -->
+                <tr>
+                    <td><label for="id" class="form-label">社員番号:</label></td>
+                    <td><input type="text" id="id" name="id" th:field="*{id}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{id}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 氏名 -->
+                <tr>
+                    <td><label for="name" class="form-label">氏名:</label></td>
+                    <td><input type="text" id="name" name="name" th:field="*{name}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{name}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 担当地区 -->
+                <tr>
+                    <td><label for="area" class="form-label">担当地区:</label></td>
+                    <td><input type="text" id="area" name="area" th:field="*{area}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{area}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 売上 -->
+                <tr>
+                    <td><label for="sales" class="form-label">売上:</label></td>
+                    <td><input type="number" id="sales" name="sales" th:field="*{sales}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{sales}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 保有顧客数 -->
+                <tr>
+                    <td><label for="customers" class="form-label">保有顧客数:</label></td>
+                    <td><input type="number" id="customers" name="customers" th:field="*{customers}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{customers}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 更新日時 -->
+                <tr>
+                    <td><label for="updatedAt" class="form-label">更新日時:</label></td>
+                    <td><input type="date" id="updatedAt" name="updatedAt" th:field="*{updatedAt}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{updatedAt}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- セクションID -->
+                <tr>
+                    <td><label for="sectionId" class="form-label">セクションID:</label></td>
+                    <td><input type="text" id="sectionId" name="sectionId" th:field="*{sectionId}" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div th:errors="*{sectionId}" class="text-danger"></div>
+                    </td>
+                </tr>
+
+                <!-- 送信ボタン -->
+                <tr>
+                    <td colspan="2" class="text-center">
+                        <button type="submit" class="btn btn-primary">送信</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

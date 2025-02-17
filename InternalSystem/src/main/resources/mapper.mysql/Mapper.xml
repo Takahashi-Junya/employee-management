@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.EmployeesMapper">
+	<resultMap id="employeesMap" type="com.example.model.EmployeesModel">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="area" property="area" />
+		<result column="sales" property="sales" />
+		<result column="customers" property="customers" />
+		<result column="updated_at" property="updatedAt" />
+		<result column="deleted_flag" property="deleted" />
+		<result column="section_id" property="sectionId" />
+	</resultMap>
+	<select id="findMany" resultMap="employeesMap">
+		SELECT
+        *
+    FROM
+        employees
+		<where>
+			<if test="id != null and id != ''">
+				AND id LIKE CONCAT ('%', #{id}, '%')
+				<!-- IDは完全一致 -->
+			</if>
+			<if test="name != null and name != ''">
+				AND name LIKE CONCAT('%', #{name}, '%')
+				<!-- 氏名は部分一致 -->
+			</if>
+			<if test="area != null and area != ''">
+				AND area LIKE CONCAT('%', #{area}, '%')
+				<!-- 担当地区も部分一致 -->
+			</if>
+		</where>
+		ORDER BY id ASC
+	</select>
+	<select id="findEmployees" resultMap="employeesMap">
+		SELECT
+			*
+		FROM
+			employees
+		<where>
+			<if test="sectionId != null">
+            	section_id = #{sectionId}
+            </if>
+			<if test="status == 'active'">
+				AND deleted_flag = false
+			</if>
+			<if test="status == 'retired'">
+				AND deleted_flag = true
+			</if>
+		</where>
+		<choose>
+			<when test="sortBy == 'id'">
+                ORDER BY CAST(id AS SIGNED) ${order}
+            </when>
+			<otherwise>
+                ORDER BY ${sortBy} ${order}
+            </otherwise>
+		</choose>
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+	<select id="countEmployees" resultType="int">
+		SELECT COUNT(*)
+    FROM employees
+		<where>
+			<if test="sectionId != null">
+            section_id = #{sectionId}
+        </if>
+			<if test="status == 'active'">
+            AND deleted_flag = false
+        </if>
+			<if test="status == 'retired'">
+            AND deleted_flag = true
+        </if>
+		</where>
+	</select>
+	<select id="findAll" resultMap="employeesMap">
+        SELECT
+            *
+        FROM
+            employees
+    </select>
+	<select id="findEmployeesBySectionId" resultMap="employeesMap">
+		SELECT
+			*
+		FROM
+			employees
+		WHERE
+			section_id = #{sectionId}
+	</select>
+	<insert id="insertOne">
+    INSERT INTO employees (
+        id,
+        name,
+        area,
+        sales,
+        customers,
+        updated_at,
+        deleted_flag,
+        section_id
+    )
+    VALUES (
+        #{id},
+        #{name},
+        #{area},
+        #{sales},
+        #{customers},
+        #{updatedAt, jdbcType=DATE},
+        #{deleted, jdbcType=BOOLEAN},
+        #{sectionId}
+    )
+</insert>
+	<select id="findOne" resultMap="employeesMap">
+        SELECT
+            *
+        FROM
+            employees
+        WHERE id = #{id}
+    </select>
+	<update id="update">
+		update
+			employees
+		set
+			area  = #{area},
+			sales = #{sales},
+			customers = #{customers},
+			updated_at = #{updatedAt},
+			deleted_flag = #{deleted}
+		where
+			id = #{id}
+	</update>
+</mapper>

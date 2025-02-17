@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>従業員編集</title>
+</head>
+
+<body>
+    <div class="container mt-4" layout:fragment="content">
+        <h2 class="mb-4">従業員編集フォーム</h2>
+
+        <form id="employee-detail-form" method="post" th:action="@{${editUrl}}" class="form-edit"
+              th:object="${employeesForm}">
+            <!-- 隠しフィールド（フォームで送信されるが、画面には表示しない） -->
+            <input type="hidden" th:field="*{sectionId}" />
+            <input type="hidden" th:field="*{updatedAt}" />
+            <input type="hidden" th:field="*{deleted}" />
+            <input type="hidden" name="returnUrl" th:value="${returnUrl}" />
+
+            <table class="table table-striped table-bordered table-hover">
+                <tbody>
+                    <!-- 社員番号（表示のみ・編集不可） -->
+                    <tr>
+                        <th class="w-25">社員番号</th>
+                        <td>
+                            <input type="text" class="form-control" th:field="*{id}" readonly>
+                        </td>
+                    </tr>
+
+                    <!-- 氏名（表示のみ・編集不可） -->
+                    <tr>
+                        <th>氏名</th>
+                        <td>
+                            <input type="text" class="form-control" th:field="*{name}" readonly>
+                        </td>
+                    </tr>
+
+                    <!-- 担当地区（編集可能） -->
+                    <tr>
+                        <th>担当地区</th>
+                        <td>
+                            <input type="text" class="form-control" th:field="*{area}">
+                            <div th:errors="*{area}" class="text-danger"></div>
+                        </td>
+                    </tr>
+
+                    <!-- 売上（編集可能） -->
+                    <tr>
+                        <th>売上</th>
+                        <td>
+                            <input type="number" class="form-control" th:field="*{sales}" min="0">
+                            <div th:errors="*{sales}" class="text-danger"></div>
+                        </td>
+                    </tr>
+
+                    <!-- 保有顧客数（編集可能） -->
+                    <tr>
+                        <th>保有顧客数</th>
+                        <td>
+                            <input type="number" class="form-control" th:field="*{customers}" min="0">
+                            <div th:errors="*{customers}" class="text-danger"></div>
+                        </td>
+                    </tr>
+
+                    <!-- ボタン -->
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <button class="btn btn-primary" type="submit">更新</button>
+                            <a th:href="${returnUrl}" class="btn btn-secondary">戻る</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
